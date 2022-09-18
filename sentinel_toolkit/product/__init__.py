@@ -1,10 +1,14 @@
 """
-Product
+S2Product
 ================
 
-Product module provides tools for working with a Sentinel-L2A product.
+S2Product module provides tools for working with Sentinel-2 product data.
 
-It provides the class ProductMetadata that has methods for retrieving some
-metadata information (Sensing Date, NODATA Value, Quantification Value,
-BOA Offset Values, Solar Irradiances) from the product's MTD_MSIL2A.xml.
+s2_product provides the class S2Product that has methods for working with
+band data - for example: read specific band, convert dn to sentinel,
+get the metadata.
+
 """
+
+from sentinel_toolkit.product.s2_product import S2Product
+from sentinel_toolkit.product.product_metadata import S2ProductMetadata

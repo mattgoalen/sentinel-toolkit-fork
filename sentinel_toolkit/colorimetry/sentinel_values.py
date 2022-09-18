@@ -145,3 +145,38 @@ def sd_to_sentinel_direct_numpy(spectral_data, bands_responses, illuminant=None)
     sd_i = spectral_data.spectral_responses * illuminant
 
     return np.dot(bands_srf, sd_i)
+
+
+def dn_to_sentinel(raw_band_data, nodata_value, boa_offset, quantification_value, solar_irradiance):
+    """
+    Converts Sentinel-2 DN values to sentinel responses.
+
+    Parameters
+    ----------
+    nodata_value : float
+        The nodata pixel value.
+    raw_band_data : ndarray
+        The raw sentinel-2 band(s) pixel values.
+    boa_offset : float scalar or ndarray
+        The boa offset.
+    solar_irradiance : float scalar or ndarray
+        The solar irradiance.
+    quantification_value : int
+        The quantification value.
+
+    Returns
+    -------
+    output : ndarray
+        The band data as sentinel response values.
+
+    """
+    raw_band_data_copy = np.copy(raw_band_data)
+    nodata_indices = raw_band_data_copy == nodata_value
+    raw_band_data_copy += boa_offset
+    raw_band_data_copy[nodata_indices] = nodata_value
+
+    sentinel_responses = raw_band_data_copy / quantification_value
+    sentinel_responses = sentinel_responses * solar_irradiance
+    sentinel_responses = np.clip(sentinel_responses, 0, 1, out=sentinel_responses)
+
+    return sentinel_responses * 100.0
