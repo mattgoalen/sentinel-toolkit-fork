@@ -5,8 +5,12 @@ from colour import SpectralDistribution
 
 from numpy.testing import assert_array_equal
 
-from sentinel_toolkit.colorimetry import sd_to_sentinel_direct_colour, SpectralData, \
-    sd_to_sentinel_direct_numpy, dn_to_sentinel
+from sentinel_toolkit.colorimetry import (
+    sd_to_sentinel_direct_colour,
+    SpectralData,
+    sd_to_sentinel_direct_numpy,
+    dn_to_sentinel
+)
 
 
 class TestSentinelValues(unittest.TestCase):

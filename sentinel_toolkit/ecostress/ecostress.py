@@ -3,9 +3,8 @@ ecostress provides a wrapper class around spectral.EcostressDatabase.
 """
 
 import numpy as np
+from colour import SpectralDistribution, SpectralShape, LinearInterpolator
 
-from colour import SpectralDistribution
-from colour import SpectralShape
 from scipy.interpolate import interp1d
 
 from sentinel_toolkit.colorimetry.sentinel_values import SpectralData
@@ -84,7 +83,7 @@ class Ecostress:
 
         spectral_distribution = SpectralDistribution(spectral_data, name='Ecostress')
         shape = SpectralShape(wavelength_rage[0], wavelength_rage[1], 1)
-        spectral_distribution.interpolate(shape)
+        spectral_distribution.interpolate(shape, LinearInterpolator)
 
         return spectral_distribution
 

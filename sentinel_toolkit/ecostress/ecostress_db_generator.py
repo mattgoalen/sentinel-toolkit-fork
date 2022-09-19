@@ -5,7 +5,6 @@ ecostress_db_generator.py can be used as a script to generate
 the database in the following manner:
 
 python ecostress_db_generator.py -d <ecostress_directory> -o <output_filename>
-
 """
 
 from argparse import ArgumentParser
