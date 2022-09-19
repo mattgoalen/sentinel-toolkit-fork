@@ -40,7 +40,7 @@ class TestEcostress(unittest.TestCase):
     @patch.object(EcostressDatabase, 'query')
     def test_get_spectrum_ids_with_wavelength_range(self, mock_ecostress_database_query):
         ecostress = Ecostress(EcostressDatabase())
-        ecostress.get_spectrum_ids(wavelength_rage=(420, 440))
+        ecostress.get_spectrum_ids(wavelength_range=(420, 440))
         mock_ecostress_database_query.assert_called_once_with(self._QUERY, (0.44, 0.42))
 
     @patch.object(EcostressDatabase, 'get_signature')
@@ -58,7 +58,7 @@ class TestEcostress(unittest.TestCase):
         mock_ecostress_db.get_signature.return_value = self._SIGNATURE_LEN_7
 
         ecostress = Ecostress(mock_ecostress_db)
-        sd = ecostress.get_spectral_distribution_colour(self._SPECTRUM_ID, wavelength_rage=(438, 443))
+        sd = ecostress.get_spectral_distribution_colour(self._SPECTRUM_ID, wavelength_range=(438, 443))
 
         assert_array_equal(self._SIGNATURE_LEN_7.x[0:-1] * 1000, sd.wavelengths)
         assert_array_almost_equal(self._SIGNATURE_LEN_7.y[0:-1] / 100, sd.values)
@@ -79,7 +79,7 @@ class TestEcostress(unittest.TestCase):
 
         ecostress = Ecostress(mock_ecostress_db)
         wavelengths, spectral_responses = ecostress.get_spectral_distribution_numpy(self._SPECTRUM_ID,
-                                                                                    wavelength_rage=(438, 443))
+                                                                                    wavelength_range=(438, 443))
 
         assert_array_equal(self._SIGNATURE_LEN_7.x[0:-1] * 1000, wavelengths)
         assert_array_almost_equal(self._SIGNATURE_LEN_7.y[0:-1] / 100, spectral_responses)

@@ -25,8 +25,8 @@ class EcostressToSentinelConverter:
     to Sentinel-2 responses saved to a CSV file.
     """
 
-    def __init__(self, ecostress_db, s2_srf):
-        self.ecostress = ecostress_db
+    def __init__(self, ecostress, s2_srf):
+        self.ecostress = ecostress
         self.s2rf = s2_srf
 
     def convert_ecostress_to_sentinel_csv(self, s2_srf_options=None, illuminant=None, out=None):

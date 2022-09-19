@@ -22,7 +22,7 @@ warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 class S2SrfOptions:
     """
     Keeps the options that can be passed to some of the S2Srf methods:
-    (satellite, band_ids, wavelenegth_range)
+    (satellite, band_ids, wavelength_range)
     """
     satellite: str = 'A'
     band_ids: List[int] = None
