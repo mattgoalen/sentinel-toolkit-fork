@@ -29,9 +29,7 @@ class EcostressToSentinelConverter:
         self.ecostress = ecostress_db
         self.s2rf = s2_srf
 
-    def convert_ecostress_to_sentinel_csv(self,
-                                          s2_srf_options=None,
-                                          illuminant=None):
+    def convert_ecostress_to_sentinel_csv(self, s2_srf_options=None, illuminant=None, out=None):
         """
         Converts the ecostress library into Sentinel-2 responses csv.
 
@@ -48,6 +46,9 @@ class EcostressToSentinelConverter:
         illuminant : ndarray
             The illuminant values.
             If missing, D65 360-830 nm values will be used.
+        out : str
+            The output filename.
+            If missing, "sentinel_<A or B>.csv" will be used.
         """
         if s2_srf_options is None:
             s2_srf_options = S2SrfOptions(satellite='A', wavelength_range=(360, 830))
@@ -56,7 +57,7 @@ class EcostressToSentinelConverter:
 
         band_names = self.s2rf.get_band_names(band_ids)
 
-        output_filename = f"sentinel_{satellite}.csv"
+        output_filename = out if out is not None else f"sentinel_{satellite}.csv"
 
         spectrum_ids = self.ecostress.get_spectrum_ids(wavelength_range)
 
@@ -122,7 +123,9 @@ def _main():
     s2_srf_options = S2SrfOptions(satellite=satellite,
                                   band_ids=band_ids,
                                   wavelength_range=wavelength_range)
-    converter.convert_ecostress_to_sentinel_csv(s2_srf_options)
+
+    out = args.out
+    converter.convert_ecostress_to_sentinel_csv(s2_srf_options, out=out)
 
 
 def _parse_args():
@@ -166,6 +169,12 @@ def _parse_args():
                         type=int,
                         default=830,
                         help="The wavelength range end. Default is 830.")
+    parser.add_argument('-o',
+                        '--out',
+                        required=False,
+                        type=int,
+                        default=830,
+                        help="The filename that will be used to store the resulting csv.")
     return parser.parse_args()
 
 
