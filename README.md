@@ -21,6 +21,85 @@ $ pip install --user sentinel-toolkit
 
 # Examples
 
+## Converting Sentinel-2 DN values to Sentinel Responses
+
+The new formula for products after 25 January 2022 is integrated.
+
+For more info check https://forum.step.esa.int/t/changes-in-band-data-after-25-jan-2022-baseline-04-00-harmonizevalues-sentinel-2-l2a-snappy/36270
+
+```python
+from sentinel_toolkit.colorimetry import dn_to_sentinel
+
+# The raw band(s) data
+# For example: with 3 bands, 10980 x 10980 x 3 ndarray can be passed
+bands_dn = None
+
+# These values can be retrieved from product.S2ProductMetadata
+# and this algorithm can be run easier from an S2Product object.
+# See section "Working with Sentinel-2 Product".
+nodata_value = 0
+bands_offsets = [-1000, -1000, -1000]
+quantification_value = 10000
+normalized_solar_irradiance = [1, 0.9312, 0.7719]
+
+sentinel_responses = dn_to_sentinel(bands_dn,
+                                    nodata_value,
+                                    bands_offsets,
+                                    quantification_value,
+                                    normalized_solar_irradiance)
+```
+
+## Working with Sentinel-2 product and metadata
+
+### Working with Sentinel-2 Product Metadata
+
+```python
+from sentinel_toolkit.product import S2ProductMetadata
+
+product_metadata = S2ProductMetadata("<path-to-metadata-filename>")
+
+# With S2ProductMetadata you can retrieve:
+# sensing data, nodata value, quantification value, band offsets
+# and solar irradiances. Currently, these methods read directly
+# from the xml and there is no caching.
+product_metadata.get_sensing_date()
+product_metadata.get_nodata_value()
+product_metadata.get_quantification_value()
+product_metadata.get_band_id_to_offset()
+product_metadata.get_band_id_to_solar_irradiance()
+
+band_ids = [1, 2, 3]
+product_metadata.get_offsets(band_ids)
+product_metadata.get_solar_irradiances(band_ids)
+product_metadata.get_normalized_solar_irradiances(band_ids)
+```
+
+### Working with Sentinel-2 Product
+
+```python
+from sentinel_toolkit.product import S2Product
+
+product = S2Product("<path-to-product-directory>")
+
+product.get_directory_name()
+product.get_metadata()
+product.get_dn_source(band_id=1)
+
+# If multiple sources are available for a given band
+# for example B02_10m.jp2, B02_20m.jp2, B02_60m.jp2,
+# the file with the best resolution will be selected.
+# In the example case, this is B02_10m.jp2.
+# (Currently this is implemented based on the band suffix).
+band_ids = [1, 2, 3]
+product.get_band_id_to_dn_source(band_ids)
+
+# Converts the given bands to sentinel responses by
+# using colorimetry.dn_to_sentinel() and passing all
+# the required metadata arguments.
+out_shape = (10980, 10980)
+profile, sentinel_responses = product.dn_to_sentinel(band_ids, out_shape)
+```
+
 ## Loading and working with Ecostress Spectral Library
 
 ### Generating SQLite database
@@ -68,9 +147,8 @@ for spectrum_id in spectrum_ids:
 
 ## Reading Sentinel-2 Spectral Response Functions
 
-Given an Excel file containing the Sentinel-2 Spectral Response Functions,
-retrieve the wavelengths, band names and bands_responses as colour.MultiSpectralDistributions
-and 2D ndarray:
+Given an Excel file containing the Sentinel-2 Spectral Response Functions, retrieve the wavelengths, band names and
+bands_responses as colour.MultiSpectralDistributions and 2D ndarray:
 
 ```python
 from sentinel_toolkit.srf import S2Srf, S2SrfOptions
