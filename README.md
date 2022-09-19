@@ -4,11 +4,13 @@
 
 This repository provides various utility tools for working with Sentinel data like:
 
-1. Generating of SQLite database for a given Ecostress Spectral Library.
-2. Wrapper class around spectral.EcostressDatabase for querying with specific filters.
-3. Wrapper class around Sentinel-2 Spectral Response Functions Excel file.
-4. Converting a spectral distribution to Sentinel Responses.
-5. Converting Ecostress Spectral Library to Sentinel Responses CSV file.
+1. Converting raw band dn values to sentinel responses.
+2. Wrapper classes around a Sentinel-2 Product and Metadata.
+3. Generating SQLite database for a given Ecostress Spectral Library.
+4. Wrapper class around spectral.EcostressDatabase for querying with specific filters.
+5. Wrapper class around Sentinel-2 Spectral Response Functions Excel file.
+6. Converting a spectral distribution to Sentinel Responses.
+7. Converting Ecostress Spectral Library to Sentinel Responses CSV file.
 
 # Installation
 
@@ -23,9 +25,10 @@ $ pip install --user sentinel-toolkit
 
 ## Converting Sentinel-2 DN values to Sentinel Responses
 
-The new formula for products after 25 January 2022 is integrated.
+The new conversion formula for products after 25 January 2022 is integrated.
 
-For more info check https://forum.step.esa.int/t/changes-in-band-data-after-25-jan-2022-baseline-04-00-harmonizevalues-sentinel-2-l2a-snappy/36270
+For more info
+check https://forum.step.esa.int/t/changes-in-band-data-after-25-jan-2022-baseline-04-00-harmonizevalues-sentinel-2-l2a-snappy/36270
 
 ```python
 from sentinel_toolkit.colorimetry import dn_to_sentinel
@@ -40,16 +43,16 @@ bands_dn = None
 nodata_value = 0
 bands_offsets = [-1000, -1000, -1000]
 quantification_value = 10000
-normalized_solar_irradiance = [1, 0.9312, 0.7719]
+normalized_solar_irradiances = [1, 0.9312, 0.7719]
 
 sentinel_responses = dn_to_sentinel(bands_dn,
                                     nodata_value,
                                     bands_offsets,
                                     quantification_value,
-                                    normalized_solar_irradiance)
+                                    normalized_solar_irradiances)
 ```
 
-## Working with Sentinel-2 product and metadata
+## Working with Sentinel-2 Product and Metadata
 
 ### Working with Sentinel-2 Product Metadata
 
@@ -83,19 +86,20 @@ product = S2Product("<path-to-product-directory>")
 
 product.get_directory_name()
 product.get_metadata()
-product.get_dn_source(band_id=1)
 
 # If multiple sources are available for a given band
 # for example B02_10m.jp2, B02_20m.jp2, B02_60m.jp2,
 # the file with the best resolution will be selected.
 # In the example case, this is B02_10m.jp2.
 # (Currently this is implemented based on the band suffix).
+product.get_dn_source(band_id=1)
+
 band_ids = [1, 2, 3]
 product.get_band_id_to_dn_source(band_ids)
 
 # Converts the given bands to sentinel responses by
-# using colorimetry.dn_to_sentinel() and passing all
-# the required metadata arguments.
+# using colorimetry.dn_to_sentinel() passing the required
+# metadata arguments, so you don't have to do it yourself.
 out_shape = (10980, 10980)
 profile, sentinel_responses = product.dn_to_sentinel(band_ids, out_shape)
 ```
