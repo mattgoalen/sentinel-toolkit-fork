@@ -40,7 +40,6 @@ class S2Product:
     _R20M_FILE_REGEX = ".*20m.jp2"
     _R60M_FILE_REGEX = ".*60m.jp2"
     _JP2_DRIVER_NAME = "JP2OpenJPEG"
-    _TIFF_DRIVER_NAME = "GTiff"
 
     def __init__(self, product_directory_name):
         self.directory_name = product_directory_name
@@ -219,6 +218,4 @@ class S2Product:
             'width': width,
             'height': height,
             'count': count,
-            'dtype': rasterio.uint8,
-            'driver': self._TIFF_DRIVER_NAME
         })
