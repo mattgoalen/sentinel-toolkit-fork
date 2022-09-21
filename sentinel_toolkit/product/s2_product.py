@@ -211,7 +211,8 @@ class S2Product:
 
         return profile, sentinel_image
 
-    def _update_profile(self, image, profile):
+    @staticmethod
+    def _update_profile(image, profile):
         height, width, count = image.shape
 
         profile.update({
