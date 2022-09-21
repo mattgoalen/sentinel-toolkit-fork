@@ -195,7 +195,7 @@ class S2Product:
             band_id_to_dn[band_id] = band_dn
 
         bands_dn = [band_id_to_dn[band_id] for band_id in band_ids]
-        raw_bands_data = np.stack(bands_dn, axis=-1).astype(np.float32)
+        raw_bands_data = np.stack(bands_dn, axis=-1).astype(np.float64)
 
         metadata = self.metadata
         sentinel_image = dn_to_sentinel(

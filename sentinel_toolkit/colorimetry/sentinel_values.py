@@ -153,11 +153,11 @@ def dn_to_sentinel(raw_band_data, nodata_value, boa_offset, quantification_value
 
     Parameters
     ----------
-    nodata_value : float
+    nodata_value : int
         The nodata pixel value.
     raw_band_data : ndarray
         The raw sentinel-2 band(s) pixel values.
-    boa_offset : float scalar or ndarray
+    boa_offset : int scalar or ndarray
         The boa offset.
     solar_irradiance : float scalar or ndarray
         The solar irradiance.
