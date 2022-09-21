@@ -2,8 +2,7 @@ import unittest
 
 import numpy as np
 from colour import SpectralDistribution
-
-from numpy.testing import assert_array_equal
+from numpy.testing import assert_allclose
 
 from sentinel_toolkit.colorimetry import (
     sd_to_sentinel_direct_colour,
@@ -37,7 +36,7 @@ class TestSentinelValues(unittest.TestCase):
         [0.926199242291321, 0.0202100642531871, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]).T
 
-    _EXPECTED_SENTINEL_RESPONSE = [10.985433231270072, 11.086160373966965, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    _EXPECTED_SENTINEL_RESPONSE = [10.985434, 11.086161, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     _BANDS_DN = np.array([
         [
@@ -107,13 +106,13 @@ class TestSentinelValues(unittest.TestCase):
 
     def test_sd_to_sentinel_direct_colour(self):
         actual = sd_to_sentinel_direct_colour(self._SPECTRAL_DISTRIBUTION, self._BANDS_RESPONSES)
-        assert_array_equal(self._EXPECTED_SENTINEL_RESPONSE, actual)
+        assert_allclose(self._EXPECTED_SENTINEL_RESPONSE, actual)
 
     def test_sd_to_sentinel_direct_numpy(self):
         spectral_data = SpectralData(self._SPECTRAL_DISTRIBUTION.wavelengths,
                                      self._SPECTRAL_DISTRIBUTION.values)
         actual = sd_to_sentinel_direct_numpy(spectral_data, self._BANDS_RESPONSES)
-        assert_array_equal(self._EXPECTED_SENTINEL_RESPONSE, actual)
+        assert_allclose(self._EXPECTED_SENTINEL_RESPONSE, actual)
 
     def test_dn_to_sentinel(self):
         sentinel_responses = dn_to_sentinel(self._BANDS_DN,
@@ -121,7 +120,7 @@ class TestSentinelValues(unittest.TestCase):
                                             self._BAND_OFFSETS,
                                             self._QUANTIFICATION_VALUE,
                                             self._NORMALIZED_SOLAR_IRRADIANCES)
-        assert_array_equal(self._EXPECTED_SENTINEL_RESPONSES, sentinel_responses)
+        assert_allclose(self._EXPECTED_SENTINEL_RESPONSES, sentinel_responses)
 
 
 if __name__ == '__main__':

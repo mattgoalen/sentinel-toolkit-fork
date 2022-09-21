@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 import numpy as np
-from numpy.testing import assert_array_equal
+from numpy.testing import assert_allclose
 from rasterio import CRS
 from rasterio._base import Profile, Affine
 
@@ -51,8 +51,8 @@ class TestProduct(unittest.TestCase):
     _OUT_SHAPE = (4, 5)
     _EXPECTED_PROFILE = Profile(
         {
-            'driver': 'GTiff',
-            'dtype': 'uint8',
+            'driver': 'JP2OpenJPEG',
+            'dtype': 'float64',
             'nodata': None,
             'width': 5,
             'height': 4,
@@ -122,7 +122,7 @@ class TestProduct(unittest.TestCase):
     def test_dn_to_sentinel(self):
         profile, responses = self.product.dn_to_sentinel(self._BAND_IDS, out_shape=self._OUT_SHAPE)
         self.assertEqual(self._EXPECTED_PROFILE, profile)
-        assert_array_equal(self._EXPECTED_SENTINEL_RESPONSES, responses)
+        assert_allclose(self._EXPECTED_SENTINEL_RESPONSES, responses)
 
 
 if __name__ == '__main__':
