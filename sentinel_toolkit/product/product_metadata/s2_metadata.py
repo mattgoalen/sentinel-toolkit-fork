@@ -21,10 +21,10 @@ class S2ProductMetadata:
     _SPECIAL_VALUE_INDEX_TAG = "SPECIAL_VALUE_INDEX"
     _NODATA_TEXT_VALUE = "NODATA"
 
-    _BOA_QUANTIFICATION_VALUE_TAG = "BOA_QUANTIFICATION_VALUE"
-    _BOA_OFFSET_VALUES_LIST_TAG = "BOA_ADD_OFFSET_VALUES_LIST"
-    _BOA_OFFSET_TAG = "BOA_ADD_OFFSET"
-    _BOA_OFFSET_BAND_ID_ATTRIBUTE = "band_id"
+    _QUANTIFICATION_VALUE_TAG = "QUANTIFICATION_VALUE"
+    _RADIO_OFFSET_VALUES_LIST_TAG = "Radiometric_Offset_List"
+    _RADIO_OFFSET_TAG = "RADIO_ADD_OFFSET"
+    _RADIO_OFFSET_BAND_ID_ATTRIBUTE = "band_id"
 
     _SOLAR_IRRADIANCE_TAG = "SOLAR_IRRADIANCE"
     _SOLAR_IRRADIANCE_BAND_ID_ATTRIBUTE = "bandId"
@@ -76,39 +76,39 @@ class S2ProductMetadata:
 
     def get_quantification_value(self):
         """
-        Retrieves the BOA Quantification Value.
+        Retrieves the Quantification Value.
 
         Returns
         -------
         output : int
-            The BOA quantification value, usually 10000.
+            The quantification value, usually 10000.
         """
-        boa_quantification_value_element = self.tree.find(
-            f'.//{self._BOA_QUANTIFICATION_VALUE_TAG}')
-        boa_quantification_value = int(boa_quantification_value_element.text)
-        return boa_quantification_value
+        quantification_value_element = self.tree.find(
+            f'.//{self._QUANTIFICATION_VALUE_TAG}')
+        quantification_value = int(quantification_value_element.text)
+        return quantification_value
 
     def get_band_id_to_offset(self):
         """
-        Retrieves a dictionary of band ids to BOA Offsets.
+        Retrieves a dictionary of band ids to RADIO Offsets.
 
         Returns
         -------
         output : dict
-            A dictionary containing the band id to BOA Offset mappings.
+            A dictionary containing the band id to RADIO Offset mappings.
         """
-        band_id_to_boa_offset = {}
+        band_id_to_radio_offset = {}
 
-        for boa_add_offset_element in self.tree.iter(self._BOA_OFFSET_TAG):
-            band_id = int(boa_add_offset_element.attrib[self._BOA_OFFSET_BAND_ID_ATTRIBUTE])
-            band_offset = int(boa_add_offset_element.text)
-            band_id_to_boa_offset[band_id] = band_offset
+        for radio_add_offset_element in self.tree.iter(self._RADIO_OFFSET_TAG):
+            band_id = int(radio_add_offset_element.attrib[self._RADIO_OFFSET_BAND_ID_ATTRIBUTE])
+            band_offset = int(radio_add_offset_element.text)
+            band_id_to_radio_offset[band_id] = band_offset
 
-        return band_id_to_boa_offset
+        return band_id_to_radio_offset
 
     def get_offsets(self, band_ids):
         """
-        Retrieves the BOA Offsets for the given band ids.
+        Retrieves the RADIO Offsets for the given band ids.
 
         Parameters
         ----------
@@ -118,7 +118,7 @@ class S2ProductMetadata:
         Returns
         -------
         output : ndarray
-            An array of the bands' BOA offsets.
+            An array of the bands' RADIO offsets.
 
         """
         return np.array([self.get_band_id_to_offset()[band_id] for band_id in band_ids])
