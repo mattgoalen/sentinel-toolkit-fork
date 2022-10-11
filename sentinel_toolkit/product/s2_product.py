@@ -36,9 +36,7 @@ class S2Product:
         11: 'B11',
         12: 'B12',
     }
-    _R10M_FILE_REGEX = ".*10m.jp2"
-    _R20M_FILE_REGEX = ".*20m.jp2"
-    _R60M_FILE_REGEX = ".*60m.jp2"
+    _FILE_REGEX = ".*B*.jp2"
     _JP2_DRIVER_NAME = "JP2OpenJPEG"
 
     def __init__(self, product_directory_name):
@@ -115,7 +113,7 @@ class S2Product:
         if band_name is None:
             raise RuntimeError(f"Unsupported band id {band_id}.")
 
-        bands_filenames = self._find_filenames(f"*{band_name}*.jp2",
+        bands_filenames = self._find_filenames(f"*{band_name}.jp2",
                                                recursive=True)
         if len(bands_filenames) == 0:
             raise RuntimeError(f"Number of found files for band id {band_id} "
@@ -127,28 +125,26 @@ class S2Product:
             band_filename = self._get_best_band_filename(bands_filenames)
             if band_filename is None:
                 raise RuntimeError(f"Cannot find a band file matching regex "
-                                   f"{self._R10M_FILE_REGEX} or "
-                                   f"{self._R20M_FILE_REGEX} or "
-                                   f"{self._R60M_FILE_REGEX}.")
+                                   f"{self._FILE_REGEX}.")
 
         band_source = rasterio.open(band_filename,
                                     driver=self._JP2_DRIVER_NAME)
         return band_source
 
-    def _get_best_band_filename(self, bands_filenames):
-        for band_filename in bands_filenames:
-            if re.match(self._R10M_FILE_REGEX, band_filename):
-                return band_filename
-
-        for band_filename in bands_filenames:
-            if re.match(self._R20M_FILE_REGEX, band_filename):
-                return band_filename
-
-        for band_filename in bands_filenames:
-            if re.match(self._R60M_FILE_REGEX, band_filename):
-                return band_filename
-
-        return None
+#    def _get_best_band_filename(self, bands_filenames):
+#        for band_filename in bands_filenames:
+#            if re.match(self._R10M_FILE_REGEX, band_filename):
+#                return band_filename
+#
+#        for band_filename in bands_filenames:
+#            if re.match(self._R20M_FILE_REGEX, band_filename):
+#                return band_filename
+#
+#        for band_filename in bands_filenames:
+#            if re.match(self._R60M_FILE_REGEX, band_filename):
+#                return band_filename
+#
+#        return None
 
     def get_band_id_to_dn_source(self, band_ids):
         """
